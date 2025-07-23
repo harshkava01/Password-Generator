@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Password Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: background 2s;
+        }
+        .container {
+            background: rgba(255,255,255,0.97);
+            padding: 2.5rem 3.5rem 2.2rem 3.5rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(32, 88, 120, 0.17), 0 2px 8px rgba(30, 140, 180, 0.09);
+            text-align: center;
+            min-width: 320px;
+            position: relative;
+            animation: pop-in 1s cubic-bezier(.68,-0.55,.27,1.55);
+        }
+        .illustration {
+            width: 110px;
+            max-width: 50vw;
+            margin-bottom: 0.7rem;
+            margin-top: -1.7rem;
+            border-radius: 13px;
+            box-shadow: 0 4px 24px #61b2d94d, 0px 2px 8px #ACB6E540;
+            transition: filter 0.15s;
+        }
+        .illustration:hover {
+            filter: brightness(1.07) saturate(1.15) drop-shadow(0 4px 17px #30eab977);
+        }
+        @keyframes pop-in {
+            0% {transform: scale(0.95) translateY(30px); opacity: 0;}
+            100% {transform: scale(1) translateY(0); opacity: 1;}
+        }
+        h2 {
+            margin-top: 0;
+            letter-spacing: 2px;
+            font-weight: 700;
+            color: #349884;
+            text-shadow: 0 2px 8px #d3f1e9;
+            font-size: 2.1rem;
+        }
+        label {
+            font-weight: 500;
+            font-size: 1.08rem;
+            margin-right: 0.45rem;
+            color: #34495e;
+        }
+        input[type="number"] {
+            padding: 0.55rem 0.7rem;
+            border-radius: 6px;
+            border: 1px solid #57c0ae;
+            width: 70px;
+            outline: none;
+            font-size: 1rem;
+            transition: border 0.2s;
+        }
+        input[type="number"]:focus {
+            border: 1.5px solid #339966;
+        }
+        button {
+            padding: 0.58rem 1.7rem;
+            border-radius: 7px;
+            border: none;
+            background: linear-gradient(90deg, #6ee7b7 0%, #349884 100%);
+            color: #fff;
+            font-size: 1.08rem;
+            margin-left: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 1px 5px #bceee5cc;
+            transition: background 0.3s, transform 0.2s;
+            letter-spacing: 1px;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #349884 0%, #6ee7b7 100%);
+            transform: scale(1.04) translateY(-1px);
+        }
+        #password {
+            margin-top: 1.6rem;
+            background: #e4f7f0;
+            color: #14514d;
+            padding: 1.05rem 0.6rem;
+            border-radius: 10px;
+            font-size: 1.18rem;
+            font-weight: 600;
+            letter-spacing: 1.8px;
+            word-break: break-all;
+            min-height: 32px;
+            box-shadow: 0 1px 7px #9ddfcc60;
+            transition: background 0.2s;
+        }
+        .options input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: #f0fdfa;
+            margin-right: 8px;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #349884;
+            border-radius: 5px;
+            position: relative;
+            vertical-align: middle;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .options input[type="checkbox"]:hover {
+            border-color: #2ecc71;
+            box-shadow: 0 0 5px #b2f5ea;
+        }
+
+        .options input[type="checkbox"]:checked {
+            background-color: #349884;
+            border-color: #2ecc71;
+        }
+
+        .options input[type="checkbox"]:checked::after {
+            content: "✔";
+            color: white;
+            position: absolute;
+            font-size: 15px;
+            left: 3px;
+            top: -1px;
+        }
+
+        .options {
+            margin: 1rem 0;
+            text-align: left;
+        }
+        .options label {
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img class="illustration" src="https://ugc.same-assets.com/JBtB0cFh-4xWiQcWZqlFPKEvSAtxRZeU.webp" alt="Password Security Illustration"/>
+        <h2>Password Generator</h2>
+
+        <div class="options">
+            <label><input type="checkbox" id="lowercase" checked> Lowercase</label>
+            <label><input type="checkbox" id="uppercase" checked> Uppercase</label>
+            <label><input type="checkbox" id="digits" checked> Numbers</label>
+            <label><input type="checkbox" id="symbols"> Symbols</label>
+        </div>
+
+        <div>
+            <label for="length">Length:</label>
+            <input type="number" id="length" min="1" max="128" value="12">
+            <button onclick="generatePassword()">Generate</button>
+        </div>
+
+        <div id="password"></div>
+    </div>
+
+    <script>
+        function generatePassword() {
+            const length = parseInt(document.getElementById('length').value);
+            const includeLower = document.getElementById('lowercase').checked;
+            const includeUpper = document.getElementById('uppercase').checked;
+            const includeDigits = document.getElementById('digits').checked;
+            const includeSymbols = document.getElementById('symbols').checked;
+
+            const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+            const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const digits = '0123456789';
+            const symbols = '!@#$%^&*()_+-=[]{}|;:,.<>/?';
+
+            let charset = '';
+            if (includeLower) charset += lowercase;
+            if (includeUpper) charset += uppercase;
+            if (includeDigits) charset += digits;
+            if (includeSymbols) charset += symbols;
+
+            if (!charset) {
+                document.getElementById('password').textContent = 'Select at least one character type.';
+                return;
+            }
+
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charset.length);
+                password += charset[randomIndex];
+            }
+
+            document.getElementById('password').textContent = password;
+        }
+    </script>
+</body>
+</html>
